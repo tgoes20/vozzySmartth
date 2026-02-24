@@ -250,6 +250,7 @@ export function installReducer(state: InstallState, action: InstallAction): Inst
       return {
         phase: 'success',
         data: state.data,
+        vercelUrl: action.vercelUrl,
       };
     }
 
@@ -328,6 +329,7 @@ export function isError(state: InstallState): state is {
 export function isSuccess(state: InstallState): state is {
   phase: 'success';
   data: InstallData;
+  vercelUrl?: string;
 } {
   return state.phase === 'success';
 }

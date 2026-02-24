@@ -23,7 +23,7 @@ import { z } from 'zod';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { runSchemaMigration, checkSchemaApplied } from '@/lib/installer/migrations';
 import { bootstrapInstance } from '@/lib/installer/bootstrap';
-import { triggerProjectRedeploy, upsertProjectEnvs, waitForVercelDeploymentReady, disableDeploymentProtection } from '@/lib/installer/vercel';
+import { triggerProjectRedeploy, upsertProjectEnvs, waitForVercelDeploymentReady, disableDeploymentProtection, createVercelProjectFromRepo } from '@/lib/installer/vercel';
 import {
   resolveSupabaseApiKeys,
   resolveSupabaseDbUrl,
@@ -86,6 +86,7 @@ interface StreamEvent {
   error?: string;
   errorDetails?: string;
   returnToStep?: InstallStep;
+  vercelUrl?: string;
 }
 
 interface Step {
@@ -401,8 +402,20 @@ export async function POST(req: Request) {
         subtitle: step1.subtitle,
       });
 
-      vercelProject = await validateVercelToken(vercel.token);
-      console.log('[provision] ✅ Step 1/12: Validate Vercel - COMPLETO', { projectId: vercelProject.projectId, projectName: vercelProject.projectName });
+      // Se o cliente informou fork do GitHub, cria um NOVO projeto Vercel vinculado a esse repo.
+      // Caso contrário, valida token e usa um projeto existente (fallback).
+      if (github?.fullName) {
+        vercelProject = await createVercelProjectFromRepo(
+          vercel.token,
+          github.fullName,
+          undefined,
+          undefined
+        );
+        console.log('[provision] ✅ Step 1/12: Novo projeto Vercel criado a partir do fork', { projectId: vercelProject.projectId, projectName: vercelProject.projectName, repo: github.fullName });
+      } else {
+        vercelProject = await validateVercelToken(vercel.token);
+        console.log('[provision] ✅ Step 1/12: Validate Vercel - COMPLETO (projeto existente)', { projectId: vercelProject.projectId, projectName: vercelProject.projectName });
+      }
       stepIndex++;
 
       // Step 2: Validate Supabase PAT
@@ -799,9 +812,12 @@ export async function POST(req: Request) {
         }
       }
 
-      // Complete!
-      console.log('[provision] 🎉 PROVISIONING COMPLETE - ALL 12 STEPS DONE!');
-      await sendEvent({ type: 'complete' });
+      // Complete! Inclui URL do app para exibir na tela de sucesso.
+      const vercelUrl = vercelProject?.projectName
+        ? `https://${vercelProject.projectName}.vercel.app`
+        : undefined;
+      console.log('[provision] 🎉 PROVISIONING COMPLETE - ALL 12 STEPS DONE!', { vercelUrl });
+      await sendEvent({ type: 'complete', vercelUrl });
     } catch (err) {
       const currentStep = STEPS[stepIndex] || STEPS[0];
       const message = err instanceof Error ? err.message : 'Erro desconhecido';

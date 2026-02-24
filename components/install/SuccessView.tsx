@@ -10,6 +10,12 @@ import { playComplete } from '@/hooks/useSoundFX';
 
 interface SuccessViewProps {
   name: string;
+  /** Email do admin configurado no wizard */
+  email?: string;
+  /** Senha configurada (exibir apenas nesta tela; não persistir) */
+  password?: string;
+  /** URL do app na Vercel (ex.: https://projeto.vercel.app) */
+  vercelUrl?: string;
 }
 
 /**
@@ -25,7 +31,7 @@ function sanitizeFirstName(fullName: string): string {
  * View de sucesso após instalação completa.
  * Tema Blade Runner - "Mais humano que humano"
  */
-export function SuccessView({ name }: SuccessViewProps) {
+export function SuccessView({ name, email, password, vercelUrl }: SuccessViewProps) {
   const firstName = sanitizeFirstName(name);
 
   // Som de conclusão ao montar
@@ -74,6 +80,46 @@ export function SuccessView({ name }: SuccessViewProps) {
         >
           &quot;Mais humano que humano&quot;
         </motion.p>
+
+        {/* Dados de acesso: URL, email, senha */}
+        {(vercelUrl || email || password) && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1 }}
+            className="mt-6 w-full rounded-lg border border-[var(--br-neon-cyan)]/30 bg-[var(--br-void-black)]/60 p-4 text-left font-mono text-sm"
+          >
+            <p className="mb-2 text-xs uppercase tracking-wider text-[var(--br-dust-gray)]">
+              Guarde estes dados
+            </p>
+            {vercelUrl && (
+              <p className="mb-2">
+                <span className="text-[var(--br-dust-gray)]">URL do app: </span>
+                <a
+                  href={vercelUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[var(--br-neon-cyan)] hover:underline"
+                >
+                  {vercelUrl}
+                </a>
+              </p>
+            )}
+            {email && (
+              <p className="mb-2">
+                <span className="text-[var(--br-dust-gray)]">Email: </span>
+                <span className="text-[var(--br-hologram-white)]">{email}</span>
+              </p>
+            )}
+            {password && (
+              <p>
+                <span className="text-[var(--br-dust-gray)]">Senha: </span>
+                <span className="text-[var(--br-hologram-white)] font-mono">{password}</span>
+                <span className="ml-2 text-xs text-[var(--br-neon-magenta)]">(guarde em local seguro)</span>
+              </p>
+            )}
+          </motion.div>
+        )}
 
         {/* CTA */}
         <motion.div

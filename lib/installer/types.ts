@@ -145,7 +145,8 @@ export interface ErrorState {
 
 export interface SuccessState {
   phase: 'success';
-  data: InstallData;           // ✅ Mantém data para exibir nome
+  data: InstallData;           // ✅ Mantém data para exibir nome, email, senha
+  vercelUrl?: string;         // URL do app na Vercel (ex.: https://projeto.vercel.app)
 }
 
 export type InstallState =
@@ -167,7 +168,7 @@ export type InstallAction =
   | { type: 'START_PROVISIONING' }
   | { type: 'PROGRESS'; progress: number; title: string; subtitle: string }
   | { type: 'ERROR'; returnToStep: InstallStep; error: string; errorDetails?: string }
-  | { type: 'COMPLETE' }
+  | { type: 'COMPLETE'; vercelUrl?: string }
   | { type: 'RETRY' }
   | { type: 'RESET' };  // ✅ Recomeça instalação do zero
 
@@ -195,7 +196,7 @@ export const actions = {
     returnToStep,
     errorDetails,
   }),
-  complete: (): InstallAction => ({ type: 'COMPLETE' }),
+  complete: (vercelUrl?: string): InstallAction => ({ type: 'COMPLETE', vercelUrl }),
   retry: (): InstallAction => ({ type: 'RETRY' }),
   /** Reseta toda a instalação para o estado inicial */
   reset: (): InstallAction => ({ type: 'RESET' }),
@@ -208,7 +209,7 @@ export const actions = {
 export type ProvisionStreamEvent =
   | { type: 'progress'; progress: number; title: string; subtitle: string }
   | { type: 'error'; error: string; returnToStep: InstallStep; errorDetails?: string }
-  | { type: 'complete' };
+  | { type: 'complete'; vercelUrl?: string };
 
 // Type guards para ProvisionStreamEvent
 export function isProgressEvent(e: ProvisionStreamEvent): e is { type: 'progress'; progress: number; title: string; subtitle: string } {
@@ -219,7 +220,7 @@ export function isErrorEvent(e: ProvisionStreamEvent): e is { type: 'error'; err
   return e.type === 'error';
 }
 
-export function isCompleteEvent(e: ProvisionStreamEvent): e is { type: 'complete' } {
+export function isCompleteEvent(e: ProvisionStreamEvent): e is { type: 'complete'; vercelUrl?: string } {
   return e.type === 'complete';
 }
 

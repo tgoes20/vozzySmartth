@@ -132,7 +132,7 @@ function InstallPageContent() {
     } else if (isErrorEvent(event)) {
       dispatch(actions.error(event.error, event.returnToStep, event.errorDetails));
     } else if (isCompleteEvent(event)) {
-      dispatch(actions.complete());
+      dispatch(actions.complete(event.vercelUrl));
     }
   }, []);
 
@@ -149,6 +149,16 @@ function InstallPageContent() {
     // Critical #2: Permite recomeçar do zero após interrupção
     dispatch(actions.reset());
   }, []);
+
+  const resetButton = (
+    <button
+      type="button"
+      onClick={handleReset}
+      className="text-xs font-mono text-[var(--br-dust-gray)] hover:text-[var(--br-neon-cyan)] underline-offset-4 hover:underline"
+    >
+      Reiniciar instalação
+    </button>
+  );
 
   // ---------------------------------------------------------------------------
   // RENDER: COLLECTING PHASE
@@ -196,8 +206,7 @@ function InstallPageContent() {
     };
 
     return (
-      <InstallLayout currentStep={step} totalSteps={7}>
-        {/* Botão "Voltar" removido - já existe dentro dos forms */}
+      <InstallLayout currentStep={step} totalSteps={7} topRight={resetButton}>
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={step}
@@ -217,15 +226,6 @@ function InstallPageContent() {
             </StepCard>
           </motion.div>
         </AnimatePresence>
-        <div className="mt-4 flex justify-center">
-          <button
-            type="button"
-            onClick={handleReset}
-            className="text-xs font-mono text-[var(--br-dust-gray)] hover:text-[var(--br-neon-cyan)] underline-offset-4 hover:underline"
-          >
-            Reiniciar instalação do zero
-          </button>
-        </div>
       </InstallLayout>
     );
   }
@@ -236,7 +236,7 @@ function InstallPageContent() {
 
   if (isProvisioning(state)) {
     return (
-      <InstallLayout showDots={false}>
+      <InstallLayout showDots={false} topRight={resetButton}>
         <ProvisioningView
           data={state.data} // ✅ Vem do state.data
           progress={state.progress}
@@ -255,7 +255,7 @@ function InstallPageContent() {
 
   if (isError(state)) {
     return (
-      <InstallLayout showDots={false}>
+      <InstallLayout showDots={false} topRight={resetButton}>
         <ErrorView
           error={state.error}
           errorDetails={state.errorDetails}
@@ -274,8 +274,13 @@ function InstallPageContent() {
 
   if (isSuccess(state)) {
     return (
-      <InstallLayout showDots={false}>
-        <SuccessView name={state.data.name} /> {/* ✅ Vem do state.data */}
+      <InstallLayout showDots={false} topRight={resetButton}>
+        <SuccessView
+          name={state.data.name}
+          email={state.data.email}
+          password={state.data.password}
+          vercelUrl={state.vercelUrl}
+        />
       </InstallLayout>
     );
   }

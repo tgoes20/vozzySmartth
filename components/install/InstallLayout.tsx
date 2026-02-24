@@ -13,6 +13,8 @@ interface InstallLayoutProps {
   totalSteps?: number;
   showLogo?: boolean;
   showDots?: boolean;
+  /** Conteúdo no canto superior direito (ex.: botão Reiniciar instalação) */
+  topRight?: ReactNode;
   className?: string;
 }
 
@@ -26,6 +28,7 @@ export function InstallLayout({
   totalSteps = 5,
   showLogo = true,
   showDots = true,
+  topRight,
   className,
 }: InstallLayoutProps) {
   const audioStartedRef = useRef(false);
@@ -57,6 +60,13 @@ export function InstallLayout({
         className
       )}
     >
+      {/* Top-right slot (ex.: Reiniciar instalação) */}
+      {topRight && (
+        <div className="absolute top-4 right-4 z-20">
+          {topRight}
+        </div>
+      )}
+
       {/* Rain effect */}
       <RainEffect dropCount={60} />
 

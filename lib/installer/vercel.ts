@@ -367,6 +367,47 @@ export async function triggerProjectRedeploy(
 }
 
 /**
+ * Cria um novo projeto Vercel vinculado a um repositório GitHub (ex.: fork do cliente).
+ * Usa a API v11 de criação de projetos com gitRepository.
+ */
+export async function createVercelProjectFromRepo(
+  token: string,
+  repoFullName: string,
+  projectName?: string,
+  teamId?: string
+): Promise<{ projectId: string; projectName: string; teamId?: string }> {
+  const name = projectName || repoFullName.split('/').pop() || 'smartzap';
+  const body = {
+    name: name.replace(/[^a-z0-9-_]/gi, '-').toLowerCase().slice(0, 100),
+    gitRepository: {
+      type: 'github' as const,
+      repo: repoFullName,
+    },
+    framework: 'nextjs' as const,
+  };
+
+  const project = await vercelFetch<VercelProject>(
+    '/v11/projects',
+    token,
+    {
+      method: 'POST',
+      body: JSON.stringify(body),
+    },
+    teamId
+  );
+
+  if (!project?.id || !project?.name) {
+    throw new Error('Resposta da Vercel sem id ou nome do projeto.');
+  }
+
+  return {
+    projectId: project.id,
+    projectName: project.name,
+    teamId,
+  };
+}
+
+/**
  * Valida um token Vercel.
  */
 export async function validateVercelToken(
