@@ -83,7 +83,13 @@ export function GitHubForm({ data, onComplete, onBack, showBack }: FormProps) {
   };
 
   const handleSuccessComplete = () => {
+    const username =
+      forkFullName && forkFullName.includes('/')
+        ? forkFullName.split('/')[0] || ''
+        : '';
+
     onComplete({
+      githubUsername: username,
       githubToken: token.trim(),
       githubForkUrl: forkUrl || (forkFullName ? `https://github.com/${forkFullName}` : undefined),
     });
