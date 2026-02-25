@@ -104,7 +104,7 @@ function LoginForm() {
           <span className="text-3xl font-bold text-white">S</span>
         </div>
         <h1 className="text-2xl font-bold text-[var(--ds-text-primary)]">
-          {companyName || 'SmartZap'}
+          {companyName || 'VozzySmart'}
         </h1>
         <p className="text-[var(--ds-text-secondary)] mt-1">Entre para continuar</p>
       </div>
@@ -165,23 +165,14 @@ function LoginForm() {
 
       {/* Footer */}
       <p className="text-center text-[var(--ds-text-muted)] text-sm mt-6">
-        SmartZap © {new Date().getFullYear()} |{' '}
+        VozzySmart © 2026 |{' '}
         <a
-          href="https://www.escoladeautomacao.com.br/"
+          href="https://vozzyup.com"
           target="_blank"
           rel="noopener noreferrer"
           className="hover:text-emerald-500 transition-colors"
         >
-          Escola de Automação
-        </a>
-        {' '}| by{' '}
-        <a
-          href="https://instagram.com/thaleslaray"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:text-emerald-500 transition-colors"
-        >
-          @thaleslaray
+          Desenvolvido por VozzyUp
         </a>
       </p>
     </div>

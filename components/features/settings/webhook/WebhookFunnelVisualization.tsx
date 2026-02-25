@@ -142,13 +142,13 @@ export function WebhookFunnelVisualization({
                       {/* Botões de ação para níveis 1 e 2 (não para o 3 que é fixo) */}
                       {!isLevel3 && (
                         <>
-                          {/* Botão Ativar SmartZap */}
+                          {/* Botão Ativar VozzySmart */}
                           {canActivate && !hasOverride && (
                             <button
                               onClick={handleActivate}
                               disabled={isBusy}
                               className="h-8 px-2.5 text-[10px] font-medium bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white rounded-lg transition-colors flex items-center gap-1"
-                              title={`Ativar SmartZap no nível #${level.level}`}
+                              title={`Ativar VozzySmart no nível #${level.level}`}
                             >
                               {isBusy ? (
                                 <Loader2 size={12} className="animate-spin" />
@@ -165,14 +165,14 @@ export function WebhookFunnelVisualization({
                               onClick={handleActivate}
                               disabled={isBusy}
                               className="h-8 px-2.5 text-[10px] font-medium bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white rounded-lg transition-colors flex items-center gap-1"
-                              title={`Substituir por SmartZap`}
+                              title={`Substituir por VozzySmart`}
                             >
                               {isBusy ? (
                                 <Loader2 size={12} className="animate-spin" />
                               ) : (
                                 <Zap size={12} />
                               )}
-                              SmartZap
+                              VozzySmart
                             </button>
                           )}
 

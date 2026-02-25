@@ -120,7 +120,7 @@ export function VercelForm({ data, onComplete, onBack, showBack }: FormProps) {
               Na Vercel, clique em <strong className="text-[var(--br-hologram-white)]">Connect GitHub</strong> e autorize com a mesma conta GitHub onde está o fork.
             </li>
             <li>
-              Se o GitHub pedir, escolha <strong className="text-[var(--br-hologram-white)]">All repositories</strong> ou inclua o repositório do SmartZap.
+              Se o GitHub pedir, escolha <strong className="text-[var(--br-hologram-white)]">All repositories</strong> ou inclua o repositório do VozzySmart.
             </li>
             <li>
               Clique em <strong className="text-[var(--br-hologram-white)]">Install</strong> / <strong className="text-[var(--br-hologram-white)]">Authorize</strong> e volte aqui.

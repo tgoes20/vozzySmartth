@@ -161,7 +161,7 @@ function buildMissingScopesSteps(missing: string[]): string[] {
     'Vá em Configurações → Usuários → System Users',
     'Selecione ou crie um System User',
     `Gere um novo token com as permissões: ${list}`,
-    'Copie o novo token e atualize no SmartZap',
+    'Copie o novo token e atualize no VozzySmart',
   ]
 }
 
