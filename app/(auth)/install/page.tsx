@@ -130,7 +130,7 @@ function InstallPageContent() {
     if (isProgressEvent(event)) {
       dispatch(actions.progress(event.progress, event.title, event.subtitle));
     } else if (isErrorEvent(event)) {
-      dispatch(actions.error(event.error, event.returnToStep, event.errorDetails));
+      dispatch(actions.error(event.error, event.returnToStep, event.errorType, event.errorDetails));
     } else if (isCompleteEvent(event)) {
       dispatch(actions.complete(event.vercelUrl));
     }
@@ -258,6 +258,7 @@ function InstallPageContent() {
       <InstallLayout showDots={false} topRight={resetButton}>
         <ErrorView
           error={state.error}
+          errorType={state.errorType}
           errorDetails={state.errorDetails}
           onRetry={handleRetry}
           onGoToStep={handleGoToStep}

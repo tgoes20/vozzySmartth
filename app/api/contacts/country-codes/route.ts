@@ -37,6 +37,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Supabase não configurado' }, { status: 503 })
     }
 
+    // Paginação: PostgREST limita a 1000 rows sem .range() explícito.
     const PAGE_SIZE = 1000
     const counts: Record<string, number> = {}
     let from = 0
